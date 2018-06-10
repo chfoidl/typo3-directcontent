@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2018-05-28T12:00:00Z" product-name="directcontent">
+        <header/>
+        <body>
+            <trans-unit id="page.name">
+                <source>Direct Content</source>
+            </trans-unit>
+            <trans-unit id="editdocument.buttonLabel">
+                <source>Translate Page</source>
+            </trans-unit>
+            <trans-unit id="record.savingDeniedMessage">
+                <source>The record "%s" couldn't be saved. DirectContent pages can only hold a single content element!</source>
+            </trans-unit>
+            <trans-unit id="record.invalidCommandMessage">
+                <source>The command "%s" for record "%s" couldn't be executed. DirectContent pages can only hold a single content element!</source>
+            </trans-unit>
+            <trans-unit id="notification.translatePage.title">
+                <source>Translate Page</source>
+            </trans-unit>
+            <trans-unit id="notification.translatePage.description">
+                <source>Please choose the language you want to translate the page to from the select box by clicking on the arrow icon!</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
