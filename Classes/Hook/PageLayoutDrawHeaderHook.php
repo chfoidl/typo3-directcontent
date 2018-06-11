@@ -50,7 +50,7 @@ class PageLayoutDrawHeaderHook
                 'id' => $pageLayoutController->id
             ]);
 
-            $contentEditUri = $uriBuilder->buildUriFromRoutePath('/record/edit', $routeConf);
+            $contentEditUri = $uriBuilder->buildUriFromRoute('record_edit', $routeConf);
             HttpUtility::redirect((string) $contentEditUri);
         }
     }
