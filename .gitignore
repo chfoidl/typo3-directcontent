@@ -1,2 +1,5 @@
 .Build
 *.log
+.history
+.vscode
+.idea

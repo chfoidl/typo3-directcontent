@@ -12,6 +12,10 @@ $boot = function($extKey) {
         'allowedTables' => 'tt_content,pages',
     ];
 
+    if (\Sethorax\DirectContent\Utility\Utility::getMajorTYPO3Version() < 9) {
+        $GLOBALS['PAGES_TYPES'][$directContentDoktype]['allowedTables'] = $GLOBALS['PAGES_TYPES'][$directContentDoktype]['allowedTables'] . ',pages_language_overlay';
+    }
+
     \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class)
         ->registerIcon(
             'apps-pagetree-page-directcontent',

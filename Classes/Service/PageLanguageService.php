@@ -2,6 +2,7 @@
 
 namespace Sethorax\DirectContent\Service;
 
+use Sethorax\DirectContent\Utility\Utility;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
@@ -15,9 +16,10 @@ class PageLanguageService implements SingletonInterface
 {
     public function getLanguagesForPage(int $pageId)
     {
-        $languages = [];
+		$languages = [];
+		$overlayTable = Utility::getMajorTYPO3Version() > 8 ? 'pages' : 'pages_language_overlay';
 
-        if ($this->getBackendUser()->check('tables_modify', 'pages')) {
+        if ($this->getBackendUser()->check('tables_modify', $overlayTable)) {
             /** @var QueryBuilder $queryBuilder */
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_language');
             $queryBuilder->getRestrictions()->removeAll();
@@ -31,7 +33,8 @@ class PageLanguageService implements SingletonInterface
                 if ($this->getBackendUser()->checkLanguageAccess($row['uid'])) {
                     $availableTranslations[(int)$row['uid']] = $row['title'];
                 }
-            }
+			}
+			
             // Then, subtract the languages which are already on the page:
             $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_language');
             $queryBuilder->getRestrictions()->removeAll();
@@ -39,35 +42,35 @@ class PageLanguageService implements SingletonInterface
                 ->from('sys_language')
                 ->join(
                     'sys_language',
-                    'pages',
-                    'pages',
-                    $queryBuilder->expr()->eq('sys_language.uid', $queryBuilder->quoteIdentifier('pages.' . $GLOBALS['TCA']['pages']['ctrl']['languageField']))
+                    $overlayTable,
+                    $overlayTable,
+                    $queryBuilder->expr()->eq('sys_language.uid', $queryBuilder->quoteIdentifier($overlayTable . '.' . $GLOBALS['TCA'][$overlayTable]['ctrl']['languageField']))
                 )
                 ->where(
                     $queryBuilder->expr()->eq(
-                        'pages.deleted',
+                        $overlayTable . '.deleted',
                         $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                     ),
                     $queryBuilder->expr()->eq(
-                        'pages.' . $GLOBALS['TCA']['pages']['ctrl']['transOrigPointerField'],
+                        $overlayTable . '.' . $GLOBALS['TCA'][$overlayTable]['ctrl']['transOrigPointerField'],
                         $queryBuilder->createNamedParameter($pageId, \PDO::PARAM_INT)
                     ),
                     $queryBuilder->expr()->orX(
                         $queryBuilder->expr()->gte(
-                            'pages.t3ver_state',
+                            $overlayTable . '.t3ver_state',
                             $queryBuilder->createNamedParameter(
                                 (string)new VersionState(VersionState::DEFAULT_STATE),
                                 \PDO::PARAM_INT
                             )
                         ),
                         $queryBuilder->expr()->eq(
-                            'pages.t3ver_wsid',
+                            $overlayTable . '.t3ver_wsid',
                             $queryBuilder->createNamedParameter($this->getBackendUser()->workspace, \PDO::PARAM_INT)
                         )
                     )
                 )
                 ->groupBy(
-                    'pages.' . $GLOBALS['TCA']['pages']['ctrl']['languageField'],
+                    $overlayTable . '.' . $GLOBALS['TCA'][$overlayTable]['ctrl']['languageField'],
                     'sys_language.uid',
                     'sys_language.pid',
                     'sys_language.tstamp',

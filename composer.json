@@ -2,7 +2,7 @@
   "name": "sethorax/typo3-directcontent",
   "description": "Adds special doktype to TYPO3 CMS to edit a single content element directly in page view.",
   "type": "typo3-cms-extension",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "GPL-3.0+",
   "keywords": [
     "TYPO3",
